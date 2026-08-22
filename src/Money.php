@@ -20,7 +20,18 @@ use Eophantasy\Money\Currency\Currency;
  */
 abstract class Money implements Stringable
 {
+    /**
+     * Minimum allowed value for nanos
+     *
+     * @var int
+     */
     private const MIN_NANOS = 0;
+
+    /**
+     * Maximum allowed value for nanos
+     *
+     * @var int
+     */
     private const MAX_NANOS = 99;
 
     /**
