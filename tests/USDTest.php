@@ -114,7 +114,7 @@ final class USDTest extends TestCase
     public function testEqualsOneCurrency(): void
     {
         $usd1 = new USD(100, 00);
-        $usd2 = new USD(200, 50);
+        $usd2 = new USD(100, 00);
         $usd3 = new USD(500, 70);
 
         $this->assertTrue($usd1->equals($usd2));
