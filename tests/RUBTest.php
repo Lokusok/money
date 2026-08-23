@@ -148,9 +148,11 @@ final class RUBTest extends TestCase
 
         $result = $rub1->add($rub2);
 
-        $this->assertTrue($result);
-        $this->assertEquals($rub1->units(), 120);
-        $this->assertEquals($rub1->nanos(), 70);
+        $this->assertInstanceOf(RUB::class, $result);
+        $this->assertNotSame($result, $rub1);
+
+        $this->assertEquals($result->units(), 120);
+        $this->assertEquals($result->nanos(), 70);
     }
 
     /**
@@ -161,12 +163,13 @@ final class RUBTest extends TestCase
      */
     public function testMoneyAddWithDifferentCurrencies(): void
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Currency code of the provided $money instance not the same');
+
         $rub1 = new RUB(100, 50);
         $usd1 = new USD(20, 20);
 
-        $result = $rub1->add($usd1);
-
-        $this->assertFalse($result);
+        $rub1->add($usd1);
     }
 
     /**
@@ -182,9 +185,11 @@ final class RUBTest extends TestCase
 
         $result = $rub1->add($rub2);
 
-        $this->assertTrue($result);
-        $this->assertEquals($rub1->units(), 201);
-        $this->assertEquals($rub1->nanos(), 2);
+        $this->assertInstanceOf(RUB::class, $result);
+        $this->assertNotSame($result, $rub1);
+
+        $this->assertEquals($result->units(), 201);
+        $this->assertEquals($result->nanos(), 2);
     }
 
     /**
@@ -200,9 +205,11 @@ final class RUBTest extends TestCase
 
         $result = $rub1->subtract($rub2);
 
-        $this->assertTrue($result);
-        $this->assertEquals($rub1->units(), 50);
-        $this->assertEquals($rub1->nanos(), 30);
+        $this->assertInstanceOf(RUB::class, $result);
+        $this->assertNotSame($result, $rub1);
+
+        $this->assertEquals($result->units(), 50);
+        $this->assertEquals($result->nanos(), 30);
     }
 
     /**
@@ -213,12 +220,13 @@ final class RUBTest extends TestCase
      */
     public function testMoneySubtractWithDifferentCurrencies(): void
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Currency code of the provided $money instance not the same');
+
         $rub1 = new RUB(100, 50);
         $usd1 = new USD(50, 20);
 
-        $result = $rub1->subtract($usd1);
-
-        $this->assertFalse($result);
+        $rub1->subtract($usd1);
     }
 
     /**
@@ -234,9 +242,11 @@ final class RUBTest extends TestCase
 
         $result = $rub1->subtract($rub2);
 
-        $this->assertTrue($result);
-        $this->assertEquals($rub1->units(), 49);
-        $this->assertEquals($rub1->nanos(), 80);
+        $this->assertInstanceOf(RUB::class, $result);
+        $this->assertNotSame($result, $rub1);
+
+        $this->assertEquals($result->units(), 49);
+        $this->assertEquals($result->nanos(), 80);
     }
 
     /**
@@ -251,9 +261,11 @@ final class RUBTest extends TestCase
 
         $result = $rub1->multiply(3);
 
-        $this->assertTrue($result);
-        $this->assertEquals($rub1->units(), 60);
-        $this->assertEquals($rub1->nanos(), 90);
+        $this->assertInstanceOf(RUB::class, $result);
+        $this->assertNotSame($result, $rub1);
+
+        $this->assertEquals($result->units(), 60);
+        $this->assertEquals($result->nanos(), 90);
     }
 
     /**
@@ -268,9 +280,11 @@ final class RUBTest extends TestCase
 
         $result = $rub1->multiply(2);
 
-        $this->assertTrue($result);
-        $this->assertEquals($rub1->units(), 201);
-        $this->assertEquals($rub1->nanos(), 0);
+        $this->assertInstanceOf(RUB::class, $result);
+        $this->assertNotSame($result, $rub1);
+
+        $this->assertEquals($result->units(), 201);
+        $this->assertEquals($result->nanos(), 0);
     }
 
     /**
@@ -285,9 +299,11 @@ final class RUBTest extends TestCase
 
         $result = $rub1->divide(2);
 
-        $this->assertTrue($result);
-        $this->assertEquals($rub1->units(), 10);
-        $this->assertEquals($rub1->nanos(), 15);
+        $this->assertInstanceOf(RUB::class, $result);
+        $this->assertNotSame($result, $rub1);
+
+        $this->assertEquals($result->units(), 10);
+        $this->assertEquals($result->nanos(), 15);
     }
 
     /**
@@ -298,10 +314,11 @@ final class RUBTest extends TestCase
      */
     public function testMoneyDivideByZero(): void
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('$divider cannot be zero');
+
         $rub1 = new RUB(20, 30);
 
-        $result = $rub1->divide(0);
-
-        $this->assertFalse($result);
+        $rub1->divide(0);
     }
 }

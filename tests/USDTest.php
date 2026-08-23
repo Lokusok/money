@@ -148,9 +148,11 @@ final class USDTest extends TestCase
 
         $result = $usd1->add($usd2);
 
-        $this->assertTrue($result);
-        $this->assertEquals($usd1->units(), 120);
-        $this->assertEquals($usd1->nanos(), 70);
+        $this->assertInstanceOf(USD::class, $result);
+        $this->assertNotSame($result, $usd1);
+
+        $this->assertEquals($result->units(), 120);
+        $this->assertEquals($result->nanos(), 70);
     }
 
     /**
@@ -161,12 +163,13 @@ final class USDTest extends TestCase
      */
     public function testMoneyAddWithDifferentCurrencies(): void
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Currency code of the provided $money instance not the same');
+
         $usd1 = new USD(100, 50);
         $rub1 = new RUB(20, 20);
 
-        $result = $usd1->add($rub1);
-
-        $this->assertFalse($result);
+        $usd1->add($rub1);
     }
 
     /**
@@ -182,9 +185,11 @@ final class USDTest extends TestCase
 
         $result = $usd1->add($usd2);
 
-        $this->assertTrue($result);
-        $this->assertEquals($usd1->units(), 201);
-        $this->assertEquals($usd1->nanos(), 2);
+        $this->assertInstanceOf(USD::class, $result);
+        $this->assertNotSame($result, $usd1);
+
+        $this->assertEquals($result->units(), 201);
+        $this->assertEquals($result->nanos(), 2);
     }
 
     /**
@@ -200,9 +205,11 @@ final class USDTest extends TestCase
 
         $result = $usd1->subtract($usd2);
 
-        $this->assertTrue($result);
-        $this->assertEquals($usd1->units(), 50);
-        $this->assertEquals($usd1->nanos(), 30);
+        $this->assertInstanceOf(USD::class, $result);
+        $this->assertNotSame($result, $usd1);
+
+        $this->assertEquals($result->units(), 50);
+        $this->assertEquals($result->nanos(), 30);
     }
 
     /**
@@ -213,12 +220,13 @@ final class USDTest extends TestCase
      */
     public function testMoneySubtractWithDifferentCurrencies(): void
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Currency code of the provided $money instance not the same');
+
         $usd1 = new USD(100, 50);
         $rub1 = new RUB(50, 20);
 
-        $result = $usd1->subtract($rub1);
-
-        $this->assertFalse($result);
+        $usd1->subtract($rub1);
     }
 
     /**
@@ -234,9 +242,11 @@ final class USDTest extends TestCase
 
         $result = $usd1->subtract($usd2);
 
-        $this->assertTrue($result);
-        $this->assertEquals($usd1->units(), 49);
-        $this->assertEquals($usd1->nanos(), 80);
+        $this->assertInstanceOf(USD::class, $result);
+        $this->assertNotSame($result, $usd1);
+
+        $this->assertEquals($result->units(), 49);
+        $this->assertEquals($result->nanos(), 80);
     }
 
     /**
@@ -251,9 +261,11 @@ final class USDTest extends TestCase
 
         $result = $usd1->multiply(3);
 
-        $this->assertTrue($result);
-        $this->assertEquals($usd1->units(), 60);
-        $this->assertEquals($usd1->nanos(), 90);
+        $this->assertInstanceOf(USD::class, $result);
+        $this->assertNotSame($result, $usd1);
+
+        $this->assertEquals($result->units(), 60);
+        $this->assertEquals($result->nanos(), 90);
     }
 
     /**
@@ -268,9 +280,11 @@ final class USDTest extends TestCase
 
         $result = $usd1->multiply(2);
 
-        $this->assertTrue($result);
-        $this->assertEquals($usd1->units(), 201);
-        $this->assertEquals($usd1->nanos(), 0);
+        $this->assertInstanceOf(USD::class, $result);
+        $this->assertNotSame($result, $usd1);
+
+        $this->assertEquals($result->units(), 201);
+        $this->assertEquals($result->nanos(), 0);
     }
 
     /**
@@ -285,9 +299,11 @@ final class USDTest extends TestCase
 
         $result = $usd1->divide(2);
 
-        $this->assertTrue($result);
-        $this->assertEquals($usd1->units(), 10);
-        $this->assertEquals($usd1->nanos(), 15);
+        $this->assertInstanceOf(USD::class, $result);
+        $this->assertNotSame($result, $usd1);
+
+        $this->assertEquals($result->units(), 10);
+        $this->assertEquals($result->nanos(), 15);
     }
 
     /**
@@ -298,10 +314,11 @@ final class USDTest extends TestCase
      */
     public function testMoneyDivideByZero(): void
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('$divider cannot be zero');
+
         $usd1 = new USD(20, 30);
 
-        $result = $usd1->divide(0);
-
-        $this->assertFalse($result);
+        $usd1->divide(0);
     }
 }

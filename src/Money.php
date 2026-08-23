@@ -96,90 +96,104 @@ abstract class Money implements Stringable
      * Add another money to current instance.
      *
      * @param Money $money The money object to add.
-     * @return bool True if addition was successfull, false otherwise.
+     * @return static New instance
+     * 
+     * @throws InvalidArgumentException On invalid arguments
      */
-    final public function add(Money $money): bool
+    final public function add(Money $money): static
     {
         if ($this->currency()->code() !== $money->currency()->code()) {
-            return false;
+            throw new InvalidArgumentException('Currency code of the provided $money instance not the same');
         }
 
-        $this->units += $money->units();
+        $instance = new static($this->units, $this->nanos);
 
-        $nextNanos = $this->nanos + $money->nanos();
+        $instance->units += $money->units();
+
+        $nextNanos = $instance->nanos + $money->nanos();
 
         if ($nextNanos > self::MAX_NANOS) {
             $toUnits = (int) ($nextNanos / 100);
-            $this->units += $toUnits;
+            $instance->units += $toUnits;
             $nextNanos -= 100 * $toUnits;
         }
 
-        $this->nanos = $nextNanos;
+        $instance->nanos = $nextNanos;
 
-        return true;
+        return $instance;
     }
 
     /**
      * Subtract money from current instance.
      *
      * @param Money $money The money object to substract.
-     * @return boolean True if substraction was successfull, false otherwise.
+     * @return static New instance
+     * 
+     * @throws InvalidArgumentException On invalid arguments
      */
-    final public function subtract(Money $money): bool
+    final public function subtract(Money $money): static
     {
         if ($this->currency()->code() !== $money->currency()->code()) {
-            return false;
+            throw new InvalidArgumentException('Currency code of the provided $money instance not the same');
         }
 
-        $this->units -= $money->units();
-        $this->nanos -= $money->nanos();
+        $instance = new static($this->units, $this->nanos);
 
-        if ($this->nanos < self::MIN_NANOS) {
-            $this->units--;
-            $this->nanos = 100 + $this->nanos;
+        $instance->units -= $money->units();
+        $instance->nanos -= $money->nanos();
+
+        if ($instance->nanos < self::MIN_NANOS) {
+            $instance->units--;
+            $instance->nanos = 100 + $instance->nanos;
         }
 
-        return true;
+        return $instance;
     }
 
     /**
      * Multiply money by specific amount.
      *
      * @param float $amount Amount to multiply.
-     * @return bool True if multiplication was successfull, false otherwise.
+     * @return static New instance
      */
-    final public function multiply(float $amount): bool
+    final public function multiply(float $amount): static
     {
-        $this->units = (int) round($this->units * $amount);
+        $instance = new static($this->units, $this->nanos);
+
+        $instance->units = (int) round($this->units * $amount);
 
         $nextNanos = (int) round($this->nanos * $amount);
         
         if ($nextNanos > self::MAX_NANOS) {
             $toUnits = (int) ($nextNanos / 100);
-            $this->units += $toUnits;
+            $instance->units += $toUnits;
             $nextNanos -= 100 * $toUnits;
         }
 
-        $this->nanos = $nextNanos;
+        $instance->nanos = $nextNanos;
 
-        return true;
+        return $instance;
     }
 
     /**
      * Divide money by specific divider.
      *
      * @param float $divider Divider to divide.
-     * @return boolean True if division was successfull, false otherwise.
+     * @return static New instance
+     * 
+     * @throws InvalidArgumentException If divider is zero
      */
-    final public function divide(float $divider): bool
+    final public function divide(float $divider): static
     {
         if ($divider === 0.0) {
-            return false;
+            throw new InvalidArgumentException('$divider cannot be zero');
         }
 
-        $this->units = (int) round($this->units / $divider);
-        $this->nanos = (int) round($this->nanos / $divider);
+        $instance = new static($this->units, $this->nanos);
 
-        return true;
+        $instance->units = (int) round($this->units / $divider);
+        $instance->nanos = (int) round($this->nanos / $divider);
+
+        return $instance;
     }
 }
